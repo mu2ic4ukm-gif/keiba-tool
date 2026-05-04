@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="競馬Analyzer">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTE0MDgsc3RvcC1vcGFjaXR5OjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwYTBhMTQsc3RvcC1vcGFjaXR5OjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSJ1cmwoI2cpIi8+PHJlY3QgeD0iMjAiIHk9IjIyIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjZDRhODQzIiBvcGFjaXR5PSIwLjciLz48cmVjdCB4PSIyMCIgeT0iMTU2IiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjZDRhODQzIiBvcGFjaXR5PSIwLjciLz48dGV4dCB4PSI5MCIgeT0iOTUiIGZvbnQtc2l6ZT0iNjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPvCfj4c8L3RleHQ+PHRleHQgeD0iOTAiIHk9IjE0OCIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI5MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNkNGE4NDMiIGxldHRlci1zcGFjaW5nPSIzIj5BTkFMWVpFUjwvdGV4dD48L3N2Zz4=">
+<title>競馬予想Analyzer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Bebas+Neue&display=swap');
+:root{--bg:#07070d;--s1:#0f0f18;--s2:#171724;--bd:#252538;--acc:#d4a843;--red:#c94f4f;--blue:#4a8fd4;--txt:#dddde8;--sub:#666688;--hon:#d4a843;--tai:#4a8fd4;--tan:#c94f4f;--del:#44445a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.wrap{max-width:960px;margin:0 auto;padding:20px 14px;}
+.hd{padding:22px 0 16px;border-bottom:1px solid var(--bd);margin-bottom:22px;text-align:center;}
+.hd h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:5px;color:var(--acc);}
+.hd p{font-size:11px;color:var(--sub);letter-spacing:2px;margin-top:4px;}
+.input-area{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:640px){.input-area{grid-template-columns:1fr;}}
+.paste-block{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:14px;}
+.paste-label{font-size:10px;letter-spacing:3px;color:var(--acc);text-transform:uppercase;margin-bottom:6px;display:block;}
+.paste-sub{font-size:10px;color:#44445a;margin-bottom:8px;line-height:1.6;display:block;}
+textarea{width:100%;height:220px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--txt);font-family:'Noto Sans JP',sans-serif;font-size:11px;padding:10px;resize:vertical;outline:none;line-height:1.7;transition:border-color .2s;}
+textarea:focus{border-color:var(--acc);}
+textarea::placeholder{color:#2a2a40;}
+.run-btn{display:block;width:100%;padding:15px;background:var(--acc);border:none;border-radius:7px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:#000;cursor:pointer;transition:all .2s;margin-bottom:10px;}
+.run-btn:hover{background:#e8c060;}
+.clear-btn{display:block;width:100%;padding:9px;margin-bottom:20px;background:none;border:1px solid var(--bd);border-radius:6px;color:var(--sub);font-size:12px;cursor:pointer;transition:all .2s;font-family:'Noto Sans JP',sans-serif;}
+.clear-btn:hover{border-color:var(--red);color:var(--red);}
+.result{display:none;}.result.show{display:block;}
+.sec{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:18px;margin-bottom:14px;animation:fu .4s ease both;}
+.sec-t{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:var(--acc);border-bottom:1px solid var(--bd);padding-bottom:8px;margin-bottom:14px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:var(--s2);color:var(--sub);padding:7px 8px;font-size:10px;letter-spacing:1px;border-bottom:1px solid var(--bd);text-align:center;}
+th.tl{text-align:left;}
+td{padding:9px 8px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+tr:hover td{background:var(--s2);}
+.tc{text-align:center;}.tl{text-align:left;}
+.bar-w{height:4px;background:var(--bd);border-radius:2px;margin-top:3px;overflow:hidden;}
+.bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--red));}
+.tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;}
+.tag{font-size:10px;background:var(--s2);border:1px solid var(--bd);border-radius:2px;padding:1px 5px;color:var(--sub);}
+.tan-v{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--acc);}
+.bb{font-family:'Bebas Neue',sans-serif;}
+.w1{background:#fff;color:#000;}.w2{background:#222;color:#fff;}
+.w3{background:#c0392b;color:#fff;}.w4{background:#2471a3;color:#fff;}
+.w5{background:#d4ac0d;color:#000;}.w6{background:#1e8449;color:#fff;}
+.w7{background:#d35400;color:#fff;}.w8{background:#c0185a;color:#fff;}
+.wc{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;flex-shrink:0;}
+.ana-card{background:linear-gradient(135deg,#1a1208,#0f1a0f);border:1px solid #6a5a20;border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:12px;}
+.ana-mark{font-size:28px;min-width:36px;text-align:center;}
+.ana-info{flex:1;min-width:0;}
+.ana-name{font-weight:700;font-size:14px;}
+.ana-detail{font-size:10px;color:var(--sub);margin-top:3px;line-height:1.6;}
+.ana-odds{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--acc);text-align:right;line-height:1;}
+.ana-odds small{font-size:10px;color:var(--sub);font-family:'Noto Sans JP',sans-serif;display:block;}
+.warn-card{background:var(--s2);border:1px solid #4a3a20;border-radius:7px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.warn-info{flex:1;min-width:0;}
+.warn-name{font-weight:700;font-size:13px;}
+.warn-detail{font-size:10px;color:var(--sub);margin-top:2px;}
+.warn-odds{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#e8a030;text-align:right;line-height:1;}
+.warn-odds small{font-size:10px;color:var(--sub);font-family:'Noto Sans JP',sans-serif;display:block;}
+.err{background:#2a1010;border:2px solid var(--red);border-radius:8px;padding:16px 18px;margin-bottom:14px;}
+.err-t{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:#e08080;margin-bottom:6px;}
+.err-body{font-size:12px;color:#e08080;line-height:1.8;}
+.parse-log{background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:10px;font-size:11px;color:var(--sub);max-height:180px;overflow-y:auto;line-height:1.9;}
+.mark-cell{font-family:'Bebas Neue',sans-serif;font-size:26px;text-align:center;}
+.score-cell{font-family:'Bebas Neue',sans-serif;font-size:22px;text-align:center;}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hd">
+  <h1>競馬予想Analyzer</h1>
+  <p>PASTE &amp; ANALYZE &#8212; データを貼り付けるだけで集計</p>
+</div>
+<div class="input-area">
+  <div class="paste-block">
+    <span class="paste-label">&#9312; 出走馬データ</span>
+    <span class="paste-sub">netkeibaのテキストをそのまま貼り付け</span>
+    <textarea id="oddsText" placeholder="ここに貼り付け"></textarea>
+  </div>
+  <div class="paste-block">
+    <span class="paste-label">&#9313; コースデータ</span>
+    <span class="paste-sub">データ上位・有利枠・得意騎手などそのまま貼り付け</span>
+    <textarea id="dataText" placeholder="ここに貼り付け"></textarea>
+  </div>
+</div>
+<button class="run-btn" onclick="analyze()">&#9658; 集計して予想を出す</button>
+<button class="clear-btn" onclick="clearAll()">&#10005; クリア</button>
+<div class="result" id="result"></div>
+</div>
+
+<script>
+function buildWakuMap(n){
+  var map={};
+  if(n<=8){for(var i=1;i<=n;i++)map[i]=i;return map;}
+  var extra=n-8,single=8-extra,h=1;
+  for(var w=1;w<=8;w++){if(w<=single){map[h++]=w;}else{map[h++]=w;map[h++]=w;}}
+  return map;
+}
+function normStr(s){
+  if(!s)return "";
+  return s.replace(/[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);})
+    .replace(/[\s\u3000\u30FB\uFF65\-]/g,"").toLowerCase();
+}
+function nmatch(a,b){
+  if(!a||!b)return false;
+  var na=normStr(a),nb=normStr(b);
+  if(!na||!nb)return false;
+  return na.indexOf(nb)>=0||nb.indexOf(na)>=0;
+}
+function normSashisu(s){
+  return s.replace("\u9003\u3052","\u9003").replace("\u5148\u884c","\u5148").replace("\u5dee\u3057","\u5dee")
+    .replace("\u8ffd\u3044\u8fbc\u307f","\u8ffd").replace("\u6350\u308a","\u6350").replace("\u307e\u304f\u308a","\u6350").trim();
+}
+
+// ============================================================
+// netkeibaフォーマット解析
+// 構造: 馬番 / -- / ○○のデータベース / 父 / 馬名 / 母 / (母父) /
+//       競馬場・調教師 / 馬主 / 生産者 / 脚質間隔 / xx.x(N人気) /
+//       性齢毛色 / [空行] / 騎手 / 戦績or初騎乗 / 斤量
+// ============================================================
+function parseHorses(raw){
+  var lines=raw.split("\n").map(function(l){return l.trim();});
+  // 馬番+--でブロック分割
+  var blocks=[];
+  var i=0;
+  while(i<lines.length){
+    var l=lines[i];
+    if(/^[1-9]\d?$/.test(l)){
+      var num=parseInt(l);
+      // 次の非空行が -- かチェック
+      var j=i+1;
+      while(j<lines.length&&lines[j].trim()==="")j++;
+      if(j<lines.length&&lines[j].trim()==="--"){
+        // ブロック収集: j+1から次の馬番+--まで
+        var block=[];
+        var k=j+1;
+        while(k<lines.length){
+          var nl=lines[k].trim();
+          if(/^[1-9]\d?$/.test(nl)){
+            var k2=k+1;
+            while(k2<lines.length&&lines[k2].trim()==="")k2++;
+            if(k2<lines.length&&lines[k2].trim()==="--")break;
+          }
+          block.push(nl);
+          k++;
+        }
+        blocks.push({num:num,lines:block});
+        i=k;
+        continue;
+      }
+    }
+    i++;
+  }
+  if(blocks.length===0)return [];
+
+  var horses=[];
+  blocks.forEach(function(block){
+    var num=block.num;
+    var all=block.lines.filter(function(l){return l.length>0;});
+
+    // 父・馬名: のデータベース行の次・2つ後
+    var sire="",name=num+"\u756a";
+    var dbIdx=-1;
+    for(var i=0;i<all.length;i++){
+      if(all[i].indexOf("\u306e\u30c7\u30fc\u30bf\u30d9\u30fc\u30b9")>=0){dbIdx=i;break;}
+    }
+    if(dbIdx>=0&&dbIdx+1<all.length)sire=all[dbIdx+1];
+    if(dbIdx>=0&&dbIdx+2<all.length)name=all[dbIdx+2];
+
+    // 母父: (○○)
+    var damSire="";
+    for(var i=0;i<all.length;i++){
+      var m=all[i].match(/^\((.+)\)$/);
+      if(m){damSire=m[1];break;}
+    }
+
+    // 調教師: 競馬場・名前 形式
+    // 競馬場キーワード: 栗東 美浦 + 地方競馬場
+    var trainer="";
+    var KBPAT=/^([\u6817\u6771\u7f8e\u6d66\u8239\u6a4b\u5927\u4e95\u5ddd\u5d0e\u6d66\u548c\u91d1\u6ca2\u540d\u53e4\u5c4b\u56ed\u7530\u59ec\u8def\u9ad8\u77e5\u7b20\u677e\u5c90\u961c\u798f\u5c71\u5e2f\u5ca1\u5c71][\u6771\u5ddd\u5d0e\u548c\u6f5f\u7389\u5c71\u90e8]?)\u30fb(.+)/;
+    for(var i=0;i<all.length;i++){
+      var m=all[i].match(KBPAT);
+      if(m){trainer=m[2].split(/[\s\u3000]/)[0];break;}
+    }
+
+    // オッズ・人気: xx.x (N人気)
+    var tan=0,ninki=0;
+    for(var i=0;i<all.length;i++){
+      var m=all[i].match(/^([\d.]+)\s*\((\d+)\u4eba\u6c17\)/);
+      if(m){tan=parseFloat(m[1]);ninki=parseInt(m[2]);break;}
+    }
+
+    // 騎手: 斤量行(xx.x or xx.5)または初騎乗の直前
+    // 先に戦績(x-x-x-x)があればそれの前
+    var jockey="";
+    var IMO=/^[\u66ff\u25b2\u25b3\u25c7\u2605\u2606\u25ce\u25cb]/;
+    for(var i=0;i<all.length;i++){
+      if(/^\d+\.\d$/.test(all[i])||all[i]==="\u521d\u9a0e\u4e57"){
+        var ji=i-1;
+        // 戦績行をスキップ
+        if(ji>=0&&/^\d+-\d+-\d+-\d+$/.test(all[ji]))ji--;
+        if(ji>=0&&all[ji]==="\u521d\u9a0e\u4e57")ji--;
+        if(ji>=0){
+          jockey=all[ji].replace(IMO,"").trim();
+        }
+        break;
+      }
+    }
+
+    // 脚質
+    var fullText=all.join(" ");
+    var sm=fullText.match(/[\u5148\u5dee\u9003\u8ffd\u6350]/g)||[];
+    var sashisu=sm.filter(function(v,i,a){return a.indexOf(v)===i;});
+
+    horses.push({num:num,ninki:ninki,name:name,tan:tan,fuku:"-",
+      jockey:jockey,trainer:trainer,sire:sire,damSire:damSire,sashisu:sashisu});
+  });
+
+  // 人気が全員0ならtan順で付与
+  if(!horses.some(function(h){return h.ninki>0;})){
+    horses.slice().sort(function(a,b){
+      if(a.tan===0&&b.tan===0)return 0;
+      if(a.tan===0)return 1;if(b.tan===0)return -1;
+      return a.tan-b.tan;
+    }).forEach(function(h,i){h.ninki=i+1;});
+  }
+  return horses;
+}
+
+// ============================================================
+// コースデータ解析
+// ============================================================
+var SD=[
+  {keys:["\u30c7\u30fc\u30bf\u4e0a\u4f4d"],id:"dataTop",type:"horse",label:"\u30c7\u30fc\u30bf\u4e0a\u4f4d"},
+  {keys:["\u30b3\u30fc\u30b9\u304c\u5f97\u610f\u306a\u99ac"],id:"courseGood",type:"horse",label:"\u30b3\u30fc\u30b9\u5f97\u610f"},
+  {keys:["\u8ddd\u96e2\u304c\u5f97\u610f\u306a\u99ac"],id:"distGood",type:"horse",label:"\u8ddd\u96e2\u5f97\u610f"},
+  {keys:["\u7af6\u9a6c\u5834\u304c\u5f97\u610f\u306a\u99ac"],id:"placeGood",type:"horse",label:"\u7af6\u9a6c\u5834\u5f97\u610f"},
+  {keys:["\u99ac\u5834\u72b6\u614b\u304c\u5f97\u610f\u306a\u99ac"],id:"babaGood",type:"horse",label:"\u99ac\u5834\u5f97\u610f"},
+  {keys:["\u30ec\u30fc\u30b9\u9593\u9694\u3067\u5b9f\u7e3e","\u4eca\u56de\u306e\u30ec\u30fc\u30b9\u9593\u9694"],id:"intervalGood",type:"horse",label:"\u9593\u9694\u5b9f\u7e3e"},
+  {keys:["\u8abf\u6559\u8a55\u4fa1\u3067\u5b9f\u7e3e","\u4eca\u56de\u306e\u8abf\u6559\u8a55\u4fa1"],id:"trainerEval",type:"horse",label:"\u8abf\u6559\u8a55\u4fa1\u5b9f\u7e3e"},
+  {keys:["\u53a9\u820e\u30b3\u30e1\u30f3\u30c8\u8a55\u4fa1\u3067\u5b9f\u7e3e","\u53a9\u820e\u30b3\u30e1\u30f3\u30c8"],id:"commentEval",type:"horse",label:"\u53a9\u820e\u30b3\u30e1\u30f3\u30c8\u5b9f\u7e3e"},
+  {keys:["\u6709\u5229\u306a\u67a0\u9806","\u6709\u5229\u67a0\u9806"],id:"favWaku",type:"waku",label:"\u6709\u5229\u67a0"},
+  {keys:["\u597d\u8abf\u67a0\u9806"],id:"goodWaku",type:"waku",label:"\u597d\u8abf\u67a0"},
+  {keys:["\u6709\u5229\u306a\u8108\u8cea","\u5f97\u610f\u306a\u8108\u8cea","\u30b3\u30fc\u30b9\u3067\u6709\u5229\u306a\u8108\u8cea"],id:"favSashisu",type:"sashisu",label:"\u6709\u5229\u8108\u8cea"},
+  {keys:["\u30b3\u30fc\u30b9\u304c\u5f97\u610f\u306a\u9a0e\u624b","\u5f97\u610f\u306a\u9a0e\u624b"],id:"favJockey",type:"text",label:"\u9a0e\u624b"},
+  {keys:["\u30b3\u30fc\u30b9\u304c\u5f97\u610f\u306a\u8abf\u6559\u5e2b","\u5f97\u610f\u306a\u8abf\u6559\u5e2b"],id:"favTrainer",type:"text",label:"\u8abf\u6559\u5e2b"},
+  {keys:["\u5b9f\u7e3e\u304c\u3042\u308b\u7a2e\u7261\u99ac","\u5f97\u610f\u306a\u7a2e\u7261\u99ac"],id:"favSire",type:"text",label:"\u7236"},
+  {keys:["\u5b9f\u7e3e\u304c\u3042\u308b\u6bcd\u7236","\u5f97\u610f\u306a\u6bcd\u7236"],id:"favDamSire",type:"text",label:"\u6bcd\u7236"},
+  {keys:["\u671f\u5f85\u3067\u304d\u308b\u9a0e\u624b"],id:"goodJockey",type:"text",label:"\u9a0e\u624b"},
+  {keys:["\u8abf\u6559\u5e2b\u3068\u76f8\u6027\u306e\u826f\u3044\u9a0e\u624b","\u99ac\u4e3b\u3068\u76f8\u6027\u306e\u826f\u3044\u9a0e\u624b","\u76f8\u6027\u306e\u826f\u3044\u9a0e\u624b"],id:"compatJockey",type:"text",label:"\u9a0e\u624b"}
+];
+var IGN=["\u3082\u3063\u3068\u898b\u308b","\u30b3\u30fc\u30b9\u5206\u6790","\u30ea\u30fc\u30c7\u30a3\u30f3\u30b0","\u7d42\u4e86\u6642\u70b9","\u4eca\u9031\u306e\u30ec\u30fc\u30b9\u50be\u5411","\u9a0e\u4e57\u9a0e\u624b\u5206\u6790","\u51fa\u8d70\u99ac\u5206\u6790","\u51fa\u8d70\u5c65\u6b74","\u30b9\u30dd\u30f3\u30b5\u30fc\u30ea\u30f3\u30af"];
+
+function parseData(raw,horses){
+  var res={};SD.forEach(function(d){res[d.id]=[];});
+  var lines=raw.split("\n").map(function(l){return l.trim();}).filter(function(l){return l.length>0;});
+  var sec=null;
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    if(IGN.some(function(w){return line.indexOf(w)>=0;})){sec=null;continue;}
+    if(line==="\u63a8\u5968\u306a\u3057"||line==="--")continue;
+    var bestId=null,bestLen=0;
+    for(var di=0;di<SD.length;di++){
+      var d=SD[di];
+      for(var ki=0;ki<d.keys.length;ki++){
+        var k=d.keys[ki];
+        if(line.indexOf(k)>=0&&k.length>bestLen){bestId=d.id;bestLen=k.length;}
+      }
+    }
+    if(bestId){sec=bestId;continue;}
+    if(!sec)continue;
+    var def=null;for(var di2=0;di2<SD.length;di2++){if(SD[di2].id===sec){def=SD[di2];break;}}
+    if(!def)continue;
+    if(def.type==="waku"){var mw=line.match(/^(\d)\u67a0/);if(mw)res[sec].push(parseInt(mw[1]));}
+    else if(def.type==="sashisu"){var ns=normSashisu(line);if(ns.length>0&&ns.length<=3)res[sec].push(ns);}
+    else if(def.type==="text"){if(line.length>0&&!/^\d+$/.test(line))res[sec].push(line.trim());}
+    else{var mn=line.match(/^(\d{1,2})/);if(mn){var n=parseInt(mn[1]);if(horses.some(function(h){return h.num===n;}))res[sec].push(n);}}
+  }
+  return res;
+}
+
+function calcScores(horses,data){
+  var scores={};
+  horses.forEach(function(h){scores[h.num]={total:0,tags:[]};});
+  function add(num,tag){if(scores[num]){scores[num].total++;scores[num].tags.push(tag);}}
+  SD.filter(function(d){return d.type==="horse";}).forEach(function(d){(data[d.id]||[]).forEach(function(num){add(num,d.label);});});
+  (data.favWaku||[]).forEach(function(w){horses.forEach(function(h){if(h.waku===w)add(h.num,"\u6709\u5229\u67a0"+w+"\u67a0");});});
+  (data.goodWaku||[]).forEach(function(w){horses.forEach(function(h){if(h.waku===w)add(h.num,"\u597d\u8abf\u67a0"+w+"\u67a0");});});
+  var favS=(data.favSashisu||[]).map(normSashisu).filter(function(s){return s;});
+  if(favS.length>0){horses.forEach(function(h){if(!h.sashisu||!h.sashisu.length)return;var matched=h.sashisu.filter(function(s){return favS.indexOf(normSashisu(s))>=0;});if(matched.length>0){var uniq=matched.filter(function(v,i,a){return a.indexOf(v)===i;});add(h.num,"\u6709\u5229\u8108\u8cea("+uniq.join("/")+")");} });}
+  var aj=[];["favJockey","goodJockey","compatJockey"].forEach(function(id){(data[id]||[]).forEach(function(n){if(aj.indexOf(n)<0)aj.push(n);});});
+  aj.forEach(function(jname){horses.forEach(function(h){if(nmatch(h.jockey,jname))add(h.num,"\u9a0e\u624b("+jname.slice(0,6)+")");});});
+  (data.favTrainer||[]).forEach(function(tname){horses.forEach(function(h){if(nmatch(h.trainer,tname))add(h.num,"\u8abf\u6559\u5e2b("+tname.slice(0,6)+")");});});
+  (data.favSire||[]).forEach(function(sname){horses.forEach(function(h){if(nmatch(h.sire,sname))add(h.num,"\u7236("+sname.slice(0,7)+")");});});
+  (data.favDamSire||[]).forEach(function(dsname){horses.forEach(function(h){if(nmatch(h.damSire,dsname))add(h.num,"\u6bcd\u7236("+dsname.slice(0,7)+")");});});
+  return scores;
+}
+
+var MD=["\u25ce","\u25cb","\u25b2","\u25b2","\u25b3","\u25b3","\u25b3","\u25b3"];
+var MC=["var(--hon)","var(--tai)","var(--tan)","var(--tan)","var(--del)","var(--del)","var(--del)","var(--del)"];
+function isWO(tags){return tags.length>0&&tags.every(function(t){return /^(\u6709\u5229\u67a0|\u597d\u8abf\u67a0)/.test(t);});}
+function hasMark(s){return s.total>=2&&!isWO(s.tags);}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function analyze(){
+  var oddsRaw=document.getElementById("oddsText").value;
+  var dataRaw=document.getElementById("dataText").value;
+  var resEl=document.getElementById("result");
+  resEl.innerHTML="";resEl.className="result";
+  if(!oddsRaw.trim()){resEl.innerHTML="<div class=\"err\"><div class=\"err-t\">\u51fa\u8d70\u99ac\u30c7\u30fc\u30bf\u304c\u5165\u529b\u3055\u308c\u3066\u3044\u307e\u305b\u3093</div></div>";resEl.className="result show";return;}
+  var horses=parseHorses(oddsRaw);
+  if(horses.length===0){resEl.innerHTML="<div class=\"err\"><div class=\"err-t\">\u51fa\u8d70\u99ac\u30c7\u30fc\u30bf\u3092\u8aad\u307f\u53d6\u308c\u307e\u305b\u3093\u3067\u3057\u305f</div><div class=\"err-body\">\u305d\u306e\u307e\u307e\u30b3\u30d4\u30da\u3057\u3066\u304f\u3060\u3055\u3044\u3002</div></div>";resEl.className="result show";return;}
+  var n=horses.length;
+  var wakuMap=buildWakuMap(n);
+  horses.forEach(function(h){h.waku=wakuMap[h.num]||1;});
+  var data=parseData(dataRaw,horses);
+  var scores=calcScores(horses,data);
+
+  // 整合性チェック
+  var hn={};horses.forEach(function(h){hn[h.num]=1;});
+  var adn=[];
+  ["dataTop","courseGood","distGood","placeGood","babaGood","intervalGood","trainerEval","commentEval"].forEach(function(id){(data[id]||[]).forEach(function(n){if(adn.indexOf(n)<0)adn.push(n);});});
+  var unn=adn.filter(function(n){return !hn[n];});
+  var warnHTML="";
+  if(adn.length>0&&unn.length/adn.length>=0.5){
+    warnHTML="<div class=\"err\"><div class=\"err-t\">\u30c7\u30fc\u30bf\u306e\u4e0d\u4e00\u81f4\u3092\u691c\u51fa</div><div class=\"err-body\">\u30b3\u30fc\u30b9\u30c7\u30fc\u30bf\u306e\u99ac\u756a("+adn.join("\u30fb")+"\u756a)\u306e\u3046\u3061\u3001\u51fa\u8d70\u99ac\u306b\u5b58\u5728\u3057\u306a\u3044\u99ac\u756a\u304c"+unn.join("\u30fb")+"\u756a\u3067\u3059\u3002<br>\u51fa\u8d70\u99ac\u30c7\u30fc\u30bf\u3068\u30b3\u30fc\u30b9\u30c7\u30fc\u30bf\u304c\u5225\u30ec\u30fc\u30b9\u306b\u306a\u3063\u3066\u3044\u308b\u53ef\u80fd\u6027\u304c\u3042\u308a\u307e\u3059\u3002</div></div>";
+  }
+
+  var sorted=horses.slice().sort(function(a,b){return scores[b.num].total-scores[a.num].total;});
+  var maxScore=1;sorted.forEach(function(h){if(scores[h.num].total>maxScore)maxScore=scores[h.num].total;});
+  var markIdx=0,markMap={};
+  sorted.forEach(function(h){if(hasMark(scores[h.num])){markMap[h.num]={m:MD[Math.min(markIdx,7)],col:MC[Math.min(markIdx,7)]};markIdx++;}});
+
+  var rows="";
+  sorted.forEach(function(h){
+    var s=scores[h.num];var mk=markMap[h.num]||null;
+    var col=s.total>=4?"var(--acc)":s.total>=2?"var(--blue)":"var(--del)";
+    var pct=Math.round(s.total/maxScore*100);
+    var tgs=s.tags.length?s.tags.map(function(t){return "<span class=\"tag\">"+esc(t)+"</span>";}).join(""):"<span style=\"color:var(--del);font-size:10px\">\u52a0\u70b9\u306a\u3057</span>";
+    var sub=[];
+    if(h.jockey)sub.push(esc(h.jockey));
+    if(h.trainer)sub.push("\u8abf:"+esc(h.trainer));
+    if(h.sire)sub.push("\u7236:"+esc(h.sire));
+    if(h.damSire)sub.push("\u6bcd\u7236:"+esc(h.damSire));
+    var mc=mk?"<div class=\"mark-cell\" style=\"color:"+mk.col+"\">"+mk.m+"</div>":"<div class=\"mark-cell\" style=\"color:var(--del)\">-</div>";
+    var rb=mk?"background:rgba(212,168,67,0.04)":"";
+    rows+="<tr style=\""+rb+"\"><td class=\"tc\">"+mc+"</td><td class=\"tc\"><div class=\"wc w"+h.waku+"\" style=\"margin:auto\">"+h.num+"</div></td><td class=\"tl\"><div style=\"font-weight:700;font-size:13px\">"+esc(h.name)+"</div>"+(sub.length?"<div style=\"font-size:10px;color:var(--sub);margin-top:2px\">"+sub.join(" / ")+"</div>":"")+"<div class=\"bar-w\"><div class=\"bar-f\" style=\"width:"+pct+"%\"></div></div><div class=\"tags\">"+tgs+"</div></td><td class=\"tc score-cell\" style=\"color:"+col+"\">"+s.total+"</td><td class=\"tc\"><span class=\"tan-v\">"+(h.tan||"-")+"</span></td></tr>";
+  });
+
+  var predNums={};Object.keys(markMap).forEach(function(k){predNums[parseInt(k)]=1;});
+  var anaCands=horses.filter(function(h){var s=scores[h.num];return !predNums[h.num]&&h.tan>=11&&s.total>=3&&s.tags.some(function(t){return !/^(\u6709\u5229\u67a0|\u597d\u8abf\u67a0)/.test(t);});}).sort(function(a,b){return(scores[b.num].total*Math.log(b.tan+1))-(scores[a.num].total*Math.log(a.tan+1));});
+  var anaHTML="<div style=\"color:var(--sub);font-size:12px;padding:8px\">\u8a72\u5f53\u99ac\u306a\u3057</div>";
+  if(anaCands.length>0){var a=anaCands[0],sa=scores[a.num];anaHTML="<div class=\"ana-card\"><div class=\"ana-mark\">&#128121;</div><div class=\"wc w"+a.waku+"\" style=\"flex-shrink:0\">"+a.num+"</div><div class=\"ana-info\"><div class=\"ana-name\">"+esc(a.name)+"</div><div class=\"ana-detail\">"+a.ninki+"\u756a\u4eba\u6c17 / \u5358\u52dd"+a.tan+"\u500d<br>"+esc(sa.tags.join(" / "))+"</div></div><div class=\"ana-odds\">"+a.tan+"<small>\u500d</small></div></div>";}
+
+  var kHorses=horses.filter(function(h){return !predNums[h.num]&&h.tan>0&&h.tan<=10;}).sort(function(a,b){return a.tan-b.tan;});
+  var keikaiHTML="<div style=\"color:var(--sub);font-size:12px;padding:8px\">\u8a72\u5f53\u99ac\u306a\u3057</div>";
+  if(kHorses.length>0){keikaiHTML=kHorses.map(function(h){var s=scores[h.num];var det=h.ninki+"\u756a\u4eba\u6c17"+(s.total>0?" / "+esc(s.tags.join(" / ")):" / \u52a0\u70b9\u306a\u3057");return "<div class=\"warn-card\"><div style=\"font-size:22px;min-width:28px;text-align:center\">&#9888;&#65039;</div><div class=\"wc w"+h.waku+"\" style=\"flex-shrink:0\">"+h.num+"</div><div class=\"warn-info\"><div class=\"warn-name\">"+esc(h.name)+"</div><div class=\"warn-detail\">"+det+"</div></div><div class=\"warn-odds\">"+h.tan+"<small>\u500d</small></div></div>";}).join("");}
+
+  var log=["\u2705 "+n+"\u982d\u7acb\u3066\u8aad\u307f\u53d6\u308a\u5b8c\u4e86"];
+  var wm=[];Object.keys(wakuMap).forEach(function(k){wm.push(k+"\u2192"+wakuMap[k]+"\u67a0");});
+  log.push("\u67a0\u30de\u30c3\u30d7: "+wm.join(" "));
+  SD.filter(function(d){return d.type==="horse";}).forEach(function(d){if(data[d.id]&&data[d.id].length)log.push(d.label+": "+data[d.id].join("\u30fb")+"\u756a");});
+  if(data.favSashisu&&data.favSashisu.length)log.push("\u6709\u5229\u8108\u8cea: "+data.favSashisu.join("\u30fb"));
+  if(data.favWaku&&data.favWaku.length)log.push("\u6709\u5229\u67a0: "+data.favWaku.join("\u30fb")+"\u67a0");
+  if(data.goodWaku&&data.goodWaku.length)log.push("\u597d\u8abf\u67a0: "+data.goodWaku.join("\u30fb")+"\u67a0");
+  if(data.favJockey&&data.favJockey.length)log.push("\u5f97\u610f\u9a0e\u624b: "+data.favJockey.join("\u30fb"));
+  if(data.goodJockey&&data.goodJockey.length)log.push("\u671f\u5f85\u9a0e\u624b: "+data.goodJockey.join("\u30fb"));
+  if(data.compatJockey&&data.compatJockey.length)log.push("\u76f8\u6027\u9a0e\u624b: "+data.compatJockey.join("\u30fb"));
+  if(data.favTrainer&&data.favTrainer.length)log.push("\u5f97\u610f\u8abf\u6559\u5e2b: "+data.favTrainer.join("\u30fb"));
+  if(data.favSire&&data.favSire.length)log.push("\u5f97\u610f\u7236: "+data.favSire.join("\u30fb"));
+  if(data.favDamSire&&data.favDamSire.length)log.push("\u5f97\u610f\u6bcd\u7236: "+data.favDamSire.join("\u30fb"));
+  log.push("--- \u99ac\u5225\u629c\u51fa\u7d50\u679c ---");
+  horses.forEach(function(h){var p=[];if(h.jockey)p.push("\u9a0e\u624b:"+h.jockey);if(h.trainer)p.push("\u8abf\u6559\u5e2b:"+h.trainer);if(h.sire)p.push("\u7236:"+h.sire);if(h.damSire)p.push("\u6bcd\u7236:"+h.damSire);if(h.sashisu&&h.sashisu.length)p.push("\u8108\u8cea:"+h.sashisu.join("/"));log.push(h.num+"\u756a "+h.name+(p.length?" / "+p.join(" / "):""));});
+
+  resEl.innerHTML=warnHTML
+    +"<div class=\"sec\" style=\"animation-delay:.05s\"><div class=\"sec-t\">\u4e88\u60f3\u5370 / \u5168\u99ac\u52a0\u70b9\u96c6\u8a08</div><div style=\"overflow-x:auto\"><table><thead><tr><th style=\"width:40px\">\u5370</th><th style=\"width:36px\">\u99ac\u756a</th><th class=\"tl\">\u99ac\u540d / \u9a0e\u624b / \u8abf\u6559\u5e2b / \u7236</th><th style=\"width:36px\">\u70b9\u6570</th><th style=\"width:50px\">\u5358\u52dd</th></tr></thead><tbody>"+rows+"</tbody></table></div></div>"
+    +"<div class=\"sec\" style=\"animation-delay:.15s\"><div class=\"sec-t\">&#128121; \u7a74\u99ac\u5019\u88dc</div>"+anaHTML+"</div>"
+    +"<div class=\"sec\" style=\"animation-delay:.25s\"><div class=\"sec-t\">&#9888;&#65039; \u8b66\u6212\u99ac\uff08\u5370\u306a\u3057\u30fb10\u500d\u4ee5\u4e0b\uff09</div>"+keikaiHTML+"</div>"
+    +"<div class=\"sec\" style=\"animation-delay:.35s\"><div class=\"sec-t\">\u89e3\u6790\u30ed\u30b0</div><div class=\"parse-log\">"+log.join("<br>")+"</div></div>";
+  resEl.className="result show";
+  resEl.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function clearAll(){
+  document.getElementById("oddsText").value="";
+  document.getElementById("dataText").value="";
+  var r=document.getElementById("result");r.innerHTML="";r.className="result";
+}
+</script>
+</body>
+</html>
